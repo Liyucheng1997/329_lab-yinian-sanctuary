@@ -1,22 +1,120 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111914"><meta name="description" content="一方安静的线上禅院。敲木鱼、拨念珠、转法轮，随呼吸回到当下。"><title>一念 · 线上禅院</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23131d17'/%3E%3Ccircle cx='20' cy='20' r='12' fill='none' stroke='%23c5ad78' stroke-width='2'/%3E%3Cpath d='M20 9v22M9 20h22' stroke='%23c5ad78'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0c0b">
+<meta name="description" content="一方安静的线上禅院。敲木鱼、拨念珠、转法轮，随梵音与呼吸回到当下。">
+<title>一念 · 线上禅院</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='6' fill='%239e3a2b'/%3E%3Ccircle cx='20' cy='20' r='11' fill='none' stroke='%23f1e6d4' stroke-width='2.4' stroke-dasharray='60 9' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Serif+SC:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
-<div class="grain"></div>
-<header><a class="brand" href="./"><span class="seal">一念</span><span>一 念<small>Y I N I A N</small></span></a><div class="header-center">此刻，回到当下。</div><button id="immersive" class="quiet-button">⛶ <span>沉浸模式</span></button></header>
-<main>
-<aside class="left-rail"><span class="rail-line"></span><span>一 呼 一 吸 · 一 念 一 心</span><span class="rail-line"></span></aside>
-<section class="sanctuary">
-<div class="eyebrow"><span></span> 线上禅院 · 随时入静 <span></span></div>
-<h1 id="heading">一声木鱼，万念归寂。</h1><p class="intro" id="intro">放下纷扰，让心随着每一次敲击，慢慢安静。</p>
-<nav class="practices" aria-label="修行方式"><button class="selected" data-mode="wood" aria-pressed="true"><span>◒</span> 敲木鱼</button><button data-mode="beads" aria-pressed="false"><span>◌</span> 拨念珠</button><button data-mode="wheel" aria-pressed="false"><span>☸</span> 转法轮</button><button data-mode="breath" aria-pressed="false"><span>〰</span> 呼吸冥想</button></nav>
-<div class="stage" id="stage"><div class="halo"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="vertical-copy">心无挂碍</span><button id="instrument" class="instrument" aria-label="敲一下木鱼"><img id="wood-image" src="wood.png" alt="暗光中的木鱼与木槌" hidden><canvas id="canvas" width="900" height="720" hidden></canvas><div id="breathing" hidden><div class="breath-circle"></div><span id="breath-label">吸气</span></div><span id="wood-fallback">◒</span></button><div id="particles" aria-hidden="true"></div><span class="vertical-copy right-copy">一念清净</span></div>
-<div class="practice-info"><div class="mantra" id="mantra">南 无 阿 弥 陀 佛</div><p id="hint">轻触木鱼，或按 <kbd>空格</kbd> 敲击</p></div>
-<div class="session"><div><span class="stat-label" id="count-label">本次敲击</span><strong id="count">0<small>次</small></strong></div><span class="divider"></span><div><span class="stat-label">静心时长</span><strong id="timer">00<em>:</em>00</strong></div><button id="reset" aria-label="重新开始本次修行" title="重新开始">↺</button></div>
-<div class="control-bar"><button id="auto" aria-pressed="false"><span id="play-icon">▷</span> <span id="auto-text">自动敲击</span></button><label class="tempo" id="tempo-label">节奏 <input id="tempo" type="range" min="30" max="120" value="60" aria-label="自动节奏，每分钟次数"><output id="tempo-value">60</output></label><span class="control-divider"></span><button id="sound" aria-pressed="true">♫ <span>音效开启</span></button><input id="volume" type="range" min="0" max="100" value="65" aria-label="音效音量"></div>
-</section>
-<aside class="right-rail"><span>静</span><small>BE PRESENT</small></aside>
-</main>
-<footer><div class="ambience"><span class="ambient-label">此间声景</span><button data-ambient="none" class="active" aria-pressed="true">无声</button><button data-ambient="rain" aria-pressed="false">☂ 细雨</button><button data-ambient="wind" aria-pressed="false">≋ 山风</button><button data-ambient="stream" aria-pressed="false">≈ 溪流</button></div><p>不问所得，只在此刻。<span>✧</span></p></footer>
-<div id="toast" role="status"></div><script src="app.js"></script>
-</body></html>
+<canvas id="atmos" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="veil" id="veil">
+  <div class="veil-inner">
+    <div class="veil-mark"><canvas class="enso-canvas" width="720" height="720" aria-hidden="true"></canvas><span>一念</span></div>
+    <p class="veil-line">放 下 · 入 静</p>
+    <button id="enter" class="enter">入 殿</button>
+    <button id="enter-silent" class="enter-silent">无声进入</button>
+    <p class="veil-note">伴乐与法器声皆为实时合成 · 宜戴耳机</p>
+  </div>
+</div>
+
+<div class="app">
+  <header class="top chrome">
+    <a class="brand" href="./" aria-label="一念 · 线上禅院"><span class="seal">一念</span><span class="brand-text">线上禅院</span></a>
+    <button id="immersive" class="ghost" aria-pressed="false" title="沉浸（Esc 退出）"><span class="icon">⛶</span><span class="label">沉浸</span></button>
+  </header>
+
+  <nav class="modes chrome" aria-label="修行方式">
+    <button data-mode="wood" class="selected" aria-pressed="true">木鱼</button>
+    <button data-mode="beads" aria-pressed="false">念珠</button>
+    <button data-mode="wheel" aria-pressed="false">法轮</button>
+    <button data-mode="breath" aria-pressed="false">观息</button>
+  </nav>
+
+  <main class="hall">
+    <h1 class="heading chrome" id="heading">一声木鱼，万念归寂</h1>
+    <div class="stage" id="stage">
+      <div class="enso-wrap" id="enso-wrap" aria-hidden="true"><canvas class="enso-canvas enso" width="900" height="900"></canvas></div>
+      <div class="ripples" id="ripples" aria-hidden="true"></div>
+      <button id="instrument" class="instrument" aria-label="敲一下木鱼">
+        <img id="wood-image" src="wood.png" alt="" draggable="false">
+        <canvas id="canvas" width="900" height="720" hidden></canvas>
+        <span id="breathing" hidden><span class="breath-circle" id="breath-circle"></span><span id="breath-label">吸气</span></span>
+      </button>
+      <div id="particles" aria-hidden="true"></div>
+    </div>
+    <div class="mantra" id="mantra" aria-hidden="true"></div>
+    <div class="tally">
+      <span class="count"><strong id="count">0</strong><small id="count-unit">声</small></span>
+      <span class="dot">·</span>
+      <span class="timer" id="timer">00:00</span>
+      <button id="reset" class="ghost chrome" aria-label="重新开始本次修行" title="重新开始">↺</button>
+    </div>
+    <p class="hint chrome" id="hint">轻触木鱼，或按 <kbd>空格</kbd></p>
+  </main>
+
+  <aside class="sutra chrome" aria-hidden="true">色不异空　空不异色</aside>
+
+  <div class="dock chrome">
+    <div class="dock-inner">
+      <button id="auto" aria-pressed="false"><span class="play" id="play-icon">▷</span><span id="auto-text">自动敲击</span></button>
+      <span class="sep"></span>
+      <button id="music" aria-pressed="false" title="伴乐开关（M）"><span class="note">♪</span><span id="music-text">伴乐</span></button>
+      <span class="sep"></span>
+      <button id="panel-toggle" aria-expanded="false" aria-controls="panel">调声</button>
+    </div>
+  </div>
+
+  <section class="panel" id="panel" hidden aria-label="声音设置">
+    <div class="group">
+      <span class="group-label">伴乐</span>
+      <div class="chips" data-group="track">
+        <button data-value="kongshan">空山<small>古琴</small></button>
+        <button data-value="fanyin">梵音<small>念诵</small></button>
+        <button data-value="chenzhong">晨钟<small>笙箫</small></button>
+      </div>
+    </div>
+    <div class="group">
+      <span class="group-label">节律</span>
+      <div class="chips" data-group="pattern">
+        <button data-value="steady">平稳<small>一拍一击</small></button>
+        <button data-value="chant">念佛<small>磬引铃随</small></button>
+        <button data-value="drum">法鼓<small>鼓鱼相和</small></button>
+      </div>
+    </div>
+    <div class="group">
+      <span class="group-label">速度</span>
+      <label class="slider"><input id="bpm" type="range" min="40" max="96" step="2" value="60" aria-label="节拍速度，每分钟拍数"><output id="bpm-out">60</output><small>拍／分</small></label>
+    </div>
+    <div class="group">
+      <span class="group-label">声景</span>
+      <div class="chips" data-group="ambient">
+        <button data-value="none">无</button>
+        <button data-value="rain">细雨</button>
+        <button data-value="wind">山风</button>
+        <button data-value="stream">溪流</button>
+      </div>
+    </div>
+    <div class="group levels">
+      <span class="group-label">音量</span>
+      <label>伴乐<input id="lv-music" type="range" min="0" max="100" aria-label="伴乐音量"></label>
+      <label>法器<input id="lv-sfx" type="range" min="0" max="100" aria-label="法器音量"></label>
+      <label>声景<input id="lv-amb" type="range" min="0" max="100" aria-label="声景音量"></label>
+    </div>
+    <p class="keys">空格 敲击 · A 自动 · M 伴乐 · Esc 退出沉浸</p>
+  </section>
+</div>
+
+<div id="toast" role="status"></div>
+<script src="audio.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
